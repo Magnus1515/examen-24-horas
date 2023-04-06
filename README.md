@@ -1,2 +1,2 @@
 # examen-24-horas
-aqui esta todo el progreso
+This was our final project in the class POO, where we build a project using HTML, CSS, FLASK, NINJA and SQLalchemy.
