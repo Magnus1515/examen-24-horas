@@ -1,0 +1,68 @@
+from app import login, db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
+class User(UserMixin, db.Model):
+    __sal = 'Esto es la sal de la pagina'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(25), index=True, unique=True)
+    email = db.Column(db.String(50), index=True, unique=True)
+    location = db.Column(db.String(100))
+    password_hash = db.Column(db.String(100))
+    restaurant_admin = db.Column(db.Boolean)
+    restaurant = db.relationship('Restaurant', backref='admin', lazy=True)
+
+    @property                           # propiedad de los puntos
+    def points(self):                   # seccion del get (regresa el valor de los puntos)
+        return db.Column(db.Integer)
+
+    @points.setter                      # funcion set que establece el valor de los puntos
+    def points(self, value):
+        self.points = value
+
+    def set_password(self, password_text):
+        self.password_hash = generate_password_hash(password_text + self.__sal)
+
+    def check_password(self, password_text):
+        return check_password_hash(self.password_hash, password_text + self.__sal)
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+
+class Food(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    meal = db.Column(db.String(30))
+    ingredients = db.Column(db.String(100))
+    calories = db.Column(db.Integer)
+    price = db.Column(db.Integer)
+    menu_id = db.Column(db.Integer, db.ForeignKey('menu.id'))
+
+    def __repr__(self):
+        return f'<Food {self.meal}>'
+
+
+class Menu(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    food = db.relationship('Food', backref='menu', lazy=True)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
+
+    def __repr__(self):
+        return f'<Food {self.food}>'
+
+
+class Restaurant(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(25), index=True, unique=True)
+    location = db.Column(db.String(100))
+    admin_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    menu = db.relationship('Menu', backref='restaurant', lazy=True)
+
+    def __repr__(self):
+        return f'{self.name}'
+
+
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}
+    Home
+{% endblock %}
+{% block content %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rock+Salt&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+
+
+    <style>
+    h1{
+        font-size: 15rem;
+        font-family: 'Black Ops One', cursive;
+    }
+    h2{
+        font-size: 2.0rem;
+        font-family: "Rock Salt", cursive;
+
+    }
+    h3{
+        font-size:1.6rem;
+        text-align: center;
+    }
+    .Restaurantes_Disponibles{
+        font-size: 2.0rem;
+        font-family: 'Michroma', sans-serif;
+    }
+
+</style>
+  <title>Drop Food - pagina principal</title>
+
+  <script type="text/javascript">
+  </script>
+
+</head>
+
+<body>
+    <header>
+        <h1  align="center">Drop Food</h1>
+        <h2  align="center" >Observa, Decide, Ordena. </h2>
+        <hr>
+        <br>
+    </header>
+
+    <main>
+        <h2 class="Restaurantes_Disponibles">Restaurantes Disponibles</h2>
+
+        <div class="Restaurantes_servicios">
+            <section>
+                <h3><a href="{{ url_for('mcdonalds') }}">McDonald's</a></h3>
+                <img src="{{ url_for('static', filename='mac.png') }}"  width="150rem" height="150rem"/>
+            </section>
+
+            <section>
+                <h3><a href="{{ url_for('tacos_poblanos') }}">Tacos Poblanos</a></h3>
+                <img  src="{{ url_for('static', filename='poblano.jpg') }}" width="150rem" height="150rem"/>
+            </section>
+
+
+            <section>
+                 <h3><a href="{{ url_for('gianluca') }}">Gianluca Pizzeria</a></h3>
+                <img src="{{ url_for('static', filename='gianluca.png') }}"  width="150rem" height="150rem"/>
+            </section>
+
+            <section>
+                 <h3><a href="{{ url_for('titos') }}">Titos Mariscos</a></h3>
+                <img  src="{{url_for('static', filename='marisco.jpg') }}"  width="150rem" height="150rem"/>
+            </section>
+        </div><!--.restaurantes-->
+    </main>
+        <style>
+        body {
+            background-color: #212121;
+            color: white;
+        }
+        .Restaurantes_servicios{
+            display: grid;
+            grid-template-columns:repeat(4,1fr);
+            justify-content:center;
+            text-align:center;
+        }
+    </style>
+</body>
+{% endblock %}

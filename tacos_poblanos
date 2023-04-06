@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Poblano's  Page
+{% endblock %}
+
+<head>
+     <style>
+    h1 {
+        font-size: 10rem;
+        font-family: 'Michroma', cursive;
+    }
+</style>
+</head>
+<body bgcolor="#b22222">
+{% block content %}
+    <h1>Tacos Poblanos</h1>
+    <p align="center">Sabor puramente mexicano, esperamos puedas disfutar de los clásicos tacos. </p>
+    <table class="table table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Meal</th>
+                    <th scope="col">Ingredients</th>
+                    <th scope="col">Calories</th>
+                    <th scope="col">Price$</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in menu %}
+                    <tr>
+                        <td>{{ item.ID }}</td>
+                        <td>{{ item.Meal }}</td>
+                        <td>{{ item.Ingredients }}</td>
+                        <td>{{ item.Calories }}</td>
+                        <td>{{ item.Price }}$</td>
+                        <td>
+                            <button class="btn btn-outline btn-success"> Buy meal </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+{% endblock %}

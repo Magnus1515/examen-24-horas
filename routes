@@ -1,0 +1,105 @@
+from flask import render_template, flash, redirect, url_for, request
+from app import app, db
+from app.forms import LoginForm, RegistrationForm
+from flask_login import current_user, login_user,logout_user, login_required
+from app.models import User
+from werkzeug.urls import url_parse
+
+
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('index.html', title='Home Page')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('login'))
+        login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template('sign_in.html', title='Sign in', form=form)
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Congratulations, you are now a registered user!')
+        return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/mcdonalds', methods=['GET', 'POST'])
+def mcdonalds():
+    menu = [
+        {'ID': 1, 'Meal':'Big Mac', 'Ingredients':'Double Meat, Cheese, Ketchup and Onion', 'Calories':250, 'Price':'8.5$'},
+        {'ID': 2, 'Meal': 'Mc Chicken', 'Ingredients': 'Chicken fries, Cheese, Lettuce, Ketchup and Onion', 'Calories': 450, 'Price': '8.5$'},
+        {'ID': 3, 'Meal': 'Potato Chips', 'Ingredients': 'Potato and Salt', 'Calories': 100, 'Price': '3.5$'},
+        {'ID': 4, 'Meal': 'Combo Big Mac', 'Ingredients': 'Big Mac, Potato Chips, Soda', 'Calories': 1080, 'Price': '12.5$'},
+        {'ID': 5, 'Meal': 'Combo Chicken McNuggets', 'Ingredients': '10 pieces of Chicken Nuggets, Potato Chips, Soda', 'Calories': 950, 'Price': '12.5$'},
+        {'ID': 6, 'Meal': 'Coca-Cola', 'Ingredients': 'Soda','Calories': 950, 'Price': '6.5$'},
+        {'ID': 7, 'Meal': 'Pink Lemonade', 'Ingredients': 'Sugar, Lemon, Water, Strawberries', 'Calories': 950, 'Price': '6.5$'}
+    ]
+
+    return render_template('mcdonalds.html', menu = menu)
+
+
+@app.route('/tacos poblanos', methods=['GET', 'POST'])
+def tacos_poblanos():
+    menu1 = [
+        {'ID': 1, 'Meal': 'Tacos de Asada', 'Ingredients': 'Corn tortilla, Roast meat, Cilantro, Avocado and Onion', 'Calories': 125, 'Price': '5.5$'},
+        {'ID': 2, 'Meal': 'Tacos de Adobada', 'Ingredients': 'Corn tortilla, Marinated, Cilantro and Onion','Calories': 332, 'Price': '5.5$'},
+        {'ID': 3, 'Meal': 'Tacos de Tripa', 'Ingredients': 'Corn tortilla, Tripe meat, Cilantro, Avocado and Onion','Calories': 96, 'Price': '4.5$'},
+        {'ID': 4, 'Meal': 'Water', 'Ingredients': 'Water', 'Calories': 99, 'Price': '3.5$'},
+        {'ID': 5, 'Meal': 'Jamaica water', 'Ingredients': 'Sugar, Water, Jamaica', 'Calories': 120, 'Price': '6.5$'},
+        {'ID': 6, 'Meal': 'Horchata water', 'Ingredients': 'Sugar, Rice, milk', 'Calories': 135, 'Price': '6.5$'}
+    ]
+    return render_template('tacos_poblanos.html', menu=menu1)
+
+
+@app.route('/titos', methods=['GET', 'POST'])
+def titos():
+    menu2 = [
+        {'ID': 1, 'Meal': 'Shrimp skewers', 'Ingredients': 'Shrimp, Red Peppers and Green Peppers','Calories': 175, 'Price': '8.5$'},
+        {'ID': 2, 'Meal': 'Tostada de Camaron', 'Ingredients': 'Shrimp and Avocado','Calories': 150, 'Price': '5.75$'},
+        {'ID': 3, 'Meal': 'Tostada de Pescado', 'Ingredients': 'Avocado, Tomate and Fish', 'Calories': 125, 'Price': '5.0$'},
+        {'ID': 4, 'Meal': 'Aguachile', 'Ingredients': 'Shrimp, Lemon, Cilantro, Chile Serrano', 'Calories': 140, 'Price': '8.75$'},
+        {'ID': 5, 'Meal': 'Jamaica water', 'Ingredients': 'Sugar, Water, Jamaica', 'Calories': 160, 'Price': '6.2$'},
+        {'ID': 6, 'Meal': 'Water', 'Ingredients': 'Water', 'Calories': 99, 'Price': '3.5$'},
+    ]
+    return render_template('titos.html', menu=menu2)
+
+
+@app.route('/gianluca', methods=['GET', 'POST'])
+def gianluca():
+    menu3 = [
+        {'ID': 1, 'Meal': 'Pizza Margherita', 'Ingredients': 'Tomate, Mozzarella, Oil, Salt and Albahaca', 'Calories': 350, 'Price': '13.34$'},
+        {'ID': 2, 'Meal': 'Pizza Peperonni', 'Ingredients': 'Pieces of Pepperoni', 'Calories': 494,'Price': '10.5$'},
+        {'ID': 3, 'Meal': 'Pasta Fettuccine Alfredo', 'Ingredients': 'Parmesan cheese, Cream, Vodka, Pieces of chicken', 'Calories': 250,'Price': '15.5$'},
+        {'ID': 4, 'Meal': 'Spaghetti Ortolana', 'Ingredients': 'Marinated sauce, Bell pepper, Mushrooms and Black Olives', 'Calories': 235,'Price': '13.5$'},
+        {'ID': 5, 'Meal': 'Coca Cola Zero', 'Ingredients': 'Soda', 'Calories': 125,'Price': '5.5$'},
+        {'ID': 6, 'Meal': 'Seven-Up', 'Ingredients': 'Soda', 'Calories': 125,'Price': '5.5$'},
+    ]
+    return render_template('gianluca.html', menu=menu3)
